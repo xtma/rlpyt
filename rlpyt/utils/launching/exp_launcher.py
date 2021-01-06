@@ -79,7 +79,7 @@ def launch_experiment(
 
 def run_experiments(script, affinity_code, experiment_title, runs_per_setting,
         variants, log_dirs, common_args=None, runs_args=None,
-        set_egl_device=False):
+        set_egl_device=False, override_prefix=False):
     """Call in a script to run a set of experiments locally on a machine.  Uses
     the ``launch_experiment()`` function for each individual run, which is a 
     call to the ``script`` file.  The number of experiments to run at the same
@@ -97,7 +97,7 @@ def run_experiments(script, affinity_code, experiment_title, runs_per_setting,
         `progress.csv` file, e.g. ``wc -l experiment-directory/.../run_*/progress.csv``.
     """
     n_run_slots = get_n_run_slots(affinity_code)
-    exp_dir = get_log_dir(experiment_title)
+    exp_dir = experiment_title if override_prefix else get_log_dir(experiment_title)
     procs = [None] * n_run_slots
     common_args = () if common_args is None else common_args
     assert len(variants) == len(log_dirs)
