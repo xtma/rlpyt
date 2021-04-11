@@ -36,6 +36,10 @@ class Td3Agent(DdpgAgent):
         self.target_q2_model = self.QModelCls(**self.env_model_kwargs,
             **self.q_model_kwargs)
         self.target_q2_model.load_state_dict(self.q2_model.state_dict())
+        max_action = env_spaces.action.high[0].max()
+        self.target_noise_std *= max_action
+        if self.target_noise_clip is not None:
+            self.target_noise_clip *= max_action
         self.target_distribution = Gaussian(
             dim=env_spaces.action.shape[0],
             std=self.target_noise_std,
