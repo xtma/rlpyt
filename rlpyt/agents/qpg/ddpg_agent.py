@@ -55,7 +55,7 @@ class DdpgAgent(BaseAgent):
             **self.q_model_kwargs)
         self.target_q_model.load_state_dict(self.q_model.state_dict())
         assert len(env_spaces.action.shape) == 1
-        max_action = env_spaces.action.high[0].max()
+        max_action = env_spaces.action.high[0]  # Assume symmetric low=-high
         self.action_std *= max_action
         if self.action_noise_clip is not None:
             self.action_noise_clip *= max_action

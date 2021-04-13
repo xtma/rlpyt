@@ -33,7 +33,6 @@ class SacAgent(BaseAgent):
             q_model_kwargs=None,
             v_model_kwargs=None,
             initial_model_state_dict=None,  # All models.
-            action_squash=1.,  # Max magnitude (or None).
             pretrain_std=0.75,  # With squash 0.75 is near uniform.
             ):
         """Saves input arguments; network defaults stored within."""
@@ -68,7 +67,7 @@ class SacAgent(BaseAgent):
         assert len(env_spaces.action.shape) == 1
         self.distribution = Gaussian(
             dim=env_spaces.action.shape[0],
-            squash=self.action_squash,
+            squash=env_spaces.action.high[0],  # Assume symmetric low=-high
             min_std=np.exp(MIN_LOG_STD),
             max_std=np.exp(MAX_LOG_STD),
         )
